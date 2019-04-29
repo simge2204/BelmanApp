@@ -5,6 +5,8 @@
  */
 package belmanapp.dal;
 
+import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.sql.Connection;
 
 /**
