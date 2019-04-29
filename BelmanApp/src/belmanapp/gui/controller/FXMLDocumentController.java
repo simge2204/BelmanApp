@@ -7,7 +7,9 @@ package belmanapp.gui.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 
 /**
  * FXML Controller class
@@ -15,6 +17,19 @@ import javafx.fxml.Initializable;
  * @author simge
  */
 public class FXMLDocumentController implements Initializable {
+
+    @FXML
+    private Label orderNumber;
+    @FXML
+    private Label customer;
+    @FXML
+    private Label deliveryDate;
+    @FXML
+    private Label txtOrdNum;
+    @FXML
+    private Label txtCustomer;
+    @FXML
+    private Label delDate;
 
     /**
      * Initializes the controller class.
@@ -24,4 +39,8 @@ public class FXMLDocumentController implements Initializable {
         // TODO
     }    
     
+    public void updateGUI()
+    {
+        
+    }
 }

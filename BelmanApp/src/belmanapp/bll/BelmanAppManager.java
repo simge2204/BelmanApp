@@ -5,10 +5,33 @@
  */
 package belmanapp.bll;
 
+import belmanapp.be.Order;
+import java.util.List;
+
 /**
  *
  * @author simge
  */
 public class BelmanAppManager {
+    private double progress;
     
+    public List<String> getAvailableWorkers()
+    {
+        
+    }
+    
+    public Order calculateProgress()
+    {
+        
+    }
+    
+    public void updateProgress()
+    {
+        
+    }
+    
+    public void updateGUI()
+    {
+        
+    }
 }

@@ -10,5 +10,22 @@ package belmanapp.be;
  * @author simge
  */
 public class Department {
-    
+    private String name;
+    private int depID;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getDepID() {
+        return depID;
+    }
+
+    public void setDepID(int depID) {
+        this.depID = depID;
+    }
 }

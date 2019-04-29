@@ -5,10 +5,25 @@
  */
 package belmanapp.dal;
 
+import java.sql.Connection;
+
 /**
  *
  * @author simge
  */
 public class DBConnection {
+    private SQLServerDataSource ds = new SQLServerDataSource();
     
+    public DBConnection()
+    {
+        ds.setUser("CS2018A_29");
+        ds.setPassword("CS2018A_29");
+        ds.setDatabaseName("BelmanAppDatabase");
+        ds.setServerName("easv-db2");
+    }
+    
+    public Connection getConnection() throws SQLServerException
+    {
+        return ds.getConnection();
+    }
 }
