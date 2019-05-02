@@ -13,15 +13,17 @@ import java.util.List;
  * @author simge
  */
 public class BelmanAppDAO {
-    public List<String> getAvailableWorkers()
-    {
-        
-    }
     
-    public Order calculateProgress()
-    {
-        
-    }
+    //Liste af aktive medarbejdere for den enkelte ordre, fra JSON filen
+//    public List<String> getAvailableWorkers()
+//    {
+//        
+//    }
+//    
+//    public Order calculateProgress()
+//    {
+//        
+//    }
     
     public void updateProgress()
     {

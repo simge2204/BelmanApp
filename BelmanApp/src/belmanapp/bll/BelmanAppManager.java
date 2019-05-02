@@ -15,16 +15,16 @@ import java.util.List;
 public class BelmanAppManager {
     private double progress;
     
-    public List<String> getAvailableWorkers()
-    {
-        
-    }
-    
-    public Order calculateProgress()
-    {
-        
-    }
-    
+//    public List<String> getAvailableWorkers()
+//    {
+//        
+//    }
+//    
+//    public Order calculateProgress()
+//    {
+//        
+//    }
+//    
     public void updateProgress()
     {
         
