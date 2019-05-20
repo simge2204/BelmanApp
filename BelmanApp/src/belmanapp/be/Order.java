@@ -5,7 +5,14 @@
  */
 package belmanapp.be;
 
-import java.time.LocalDate;
+import belmanapp.JsonData;
+import belmanapp.bll.JsonParser;
+import java.sql.SQLException;
+import java.sql.Date;
+import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -13,9 +20,15 @@ import java.time.LocalDate;
  */
 public class Order {
     private int orderID;
-    private LocalDate deliveryDate;
+    private String orderNumber;
+    private Date deliveryDate;
     private String department;
     private String customer;
+    belmanapp.bll.BelmanAppManager BAManager;
+
+    public Order() {
+        
+    }
 
     public int getOrderID() {
         return orderID;
@@ -24,12 +37,22 @@ public class Order {
     public void setOrderID(int orderID) {
         this.orderID = orderID;
     }
+    
+    public String getOrderNumber()
+    {
+        return orderNumber;
+    }
+    
+    public void setOrderNumber(String orderNumber)
+    {
+        this.orderNumber = orderNumber;
+    }
 
-    public LocalDate getDeliveryDate() {
+    public Date getDeliveryDate() {
         return deliveryDate;
     }
 
-    public void setDeliveryDate(LocalDate deliveryDate) {
+    public void setDeliveryDate(Date deliveryDate) {
         this.deliveryDate = deliveryDate;
     }
 
@@ -47,5 +70,10 @@ public class Order {
 
     public void setCustomer(String customer) {
         this.customer = customer;
+    }
+    
+    @Override
+    public String toString() {
+        return "Order [orderID=" + orderID + ", deliveryDate=" + deliveryDate + ", customer=" + customer + "]";
     }
 }

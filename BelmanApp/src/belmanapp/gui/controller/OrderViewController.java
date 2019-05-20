@@ -39,8 +39,6 @@ public class OrderViewController implements Initializable {
     @FXML
     private Label txtCustomer;
     @FXML
-    private Label delDate;
-    @FXML
     private AnchorPane orderInfo;
     @FXML
     private AnchorPane progressView;
@@ -50,12 +48,16 @@ public class OrderViewController implements Initializable {
     private AnchorPane availableWorkers;
     @FXML
     private Button taskDone;
-    
-    private Background GREEN;
     @FXML
     private ProgressBar estimatedP;
     @FXML
     private ProgressBar realizedP;
+    @FXML
+    private Label txtDate;
+    
+    private Background GREEN;
+    private Order selectedOrder;
+    belmanapp.gui.controller.MainController mainController = new MainController();
 
     /**
      * Initializes the controller class.
@@ -63,7 +65,12 @@ public class OrderViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
+    }
+    
+    public void setMainController(MainController mainController)
+    {
+        this.mainController = mainController;
+    }
 
     //Knappen "Færdig", hvilket har funktionen at markere afdelingen som færdig med opgaven, samt at vise dette til de andre afdelinger
     @FXML
@@ -93,5 +100,13 @@ public class OrderViewController implements Initializable {
     public void updateGUI()
     {
         
+    }
+    
+    public void setOrderView(Order selectedOrder)
+    {
+        this.selectedOrder = selectedOrder;
+        txtOrdNum.setUserData(selectedOrder.getOrderID());
+        txtCustomer.setUserData(selectedOrder.getCustomer());
+        txtDate.setUserData(selectedOrder.getDeliveryDate());
     }
 }

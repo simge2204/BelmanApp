@@ -12,6 +12,7 @@ package belmanapp.be;
 public class Department {
     private String name;
     private int depID;
+    private String worker;
 
     public String getName() {
         return name;
@@ -27,5 +28,20 @@ public class Department {
 
     public void setDepID(int depID) {
         this.depID = depID;
+    }
+    
+    public String getWorker()
+    {
+        return worker;
+    }
+    
+    public void setWorker(String worker)
+    {
+        this.worker = worker;
+    }
+    
+    @Override
+    public String toString() {
+        return "Department [name=" + name + ", depID=" + depID + ", worker=" + worker + "]";
     }
 }

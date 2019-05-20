@@ -5,14 +5,21 @@
  */
 package belmanapp;
 
+import belmanapp.be.Order;
+import belmanapp.dal.BelmanAppDAO;
+import belmanapp.dal.JsonDAO;
 import belmanapp.gui.controller.MainController;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -20,6 +27,10 @@ import javafx.stage.Stage;
  */
 public class BelmanApp extends Application {
     private Stage primaryStage;
+    MainController mc = new MainController();
+    private String ord;
+    BelmanAppDAO bDAO = new BelmanAppDAO();
+    
 //    belmanapp.gui.controller.MainController getAllOrderNumbers;
     
 //    @Override
@@ -46,7 +57,7 @@ public class BelmanApp extends Application {
     }
     
      // main window
-    public void mainWindow() throws IOException {
+    public void mainWindow() throws IOException, SQLException, FileNotFoundException, ParseException, java.text.ParseException {
             // view
             FXMLLoader loader = new FXMLLoader(BelmanApp.class.getClassLoader().getResource("belmanapp/gui/view/Main.fxml"));
             Parent root = (Parent)loader.load();
@@ -60,6 +71,8 @@ public class BelmanApp extends Application {
             primaryStage.setScene(new Scene(root));
 //            stage.setScene(scene);
             primaryStage.show();
+//            jDAO.createOrderNumbers(ord);
+//            mc.getOrderNumbers(obj);
     }
     
     /**

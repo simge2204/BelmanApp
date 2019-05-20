@@ -5,8 +5,13 @@
  */
 package belmanapp.bll;
 
+import belmanapp.JsonData;
 import belmanapp.be.Order;
+import belmanapp.dal.BelmanAppDAO;
+import belmanapp.dal.JsonDAO;
 import java.util.List;
+import javafx.collections.ObservableList;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -14,17 +19,19 @@ import java.util.List;
  */
 public class BelmanAppManager {
     private double progress;
+    belmanapp.dal.BelmanAppDAO dao;
+    belmanapp.dal.JsonDAO jDao = new JsonDAO();
     
-//    public List<String> getAvailableWorkers()
-//    {
-//        
-//    }
-//    
-//    public Order calculateProgress()
-//    {
-//        
-//    }
-//    
+    public List<String> getAvailableWorkers()
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public Order calculateProgress()
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
     public void updateProgress()
     {
         
@@ -33,5 +40,9 @@ public class BelmanAppManager {
     public void updateGUI()
     {
         
+    }
+
+    public List<Order> getOrders() {
+        return jDao.getOrders();
     }
 }

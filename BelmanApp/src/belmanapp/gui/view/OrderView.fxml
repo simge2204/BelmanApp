@@ -35,7 +35,7 @@
                                                 <Label fx:id="deliveryDate" layoutX="26.0" layoutY="150.0" text="Delivery date:" />
                                                 <Label fx:id="txtOrdNum" layoutX="142.0" layoutY="53.0" prefHeight="21.0" prefWidth="60.0" />
                                                 <Label fx:id="txtCustomer" layoutX="114.0" layoutY="100.0" prefHeight="21.0" prefWidth="52.0" />
-                                                <Label fx:id="delDate" layoutX="132.0" layoutY="150.0" prefHeight="21.0" prefWidth="56.0" />
+                                                <Label fx:id="txtDate" layoutX="132.0" layoutY="150.0" prefHeight="21.0" prefWidth="56.0" />
                                                 <Label layoutX="14.0" text="Order information">
                                                    <font>
                                                       <Font size="24.0" />
@@ -75,7 +75,7 @@
                                                   <panes>
                                                     <TitledPane animated="false" text="untitled 1">
                                                       <content>
-                                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="43.0" prefWidth="239.0">
+                                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="63.0" prefWidth="239.0">
                                                                <children>
                                                                   <CheckBox layoutX="88.0" layoutY="25.0" mnemonicParsing="false" text="Done" />
                                                                </children></AnchorPane>

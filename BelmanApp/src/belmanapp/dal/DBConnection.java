@@ -14,13 +14,13 @@ import java.sql.Connection;
  * @author simge
  */
 public class DBConnection {
-    private SQLServerDataSource ds = new SQLServerDataSource();
+    SQLServerDataSource ds = new SQLServerDataSource();
     
     public DBConnection()
     {
         ds.setUser("CS2018A_29");
         ds.setPassword("CS2018A_29");
-        ds.setDatabaseName("BelmanAppDatabase");
+        ds.setDatabaseName("BelmanAppDatabse");
         ds.setServerName("easv-db2");
     }
     
