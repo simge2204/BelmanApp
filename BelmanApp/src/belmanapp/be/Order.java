@@ -19,12 +19,22 @@ import org.json.simple.JSONObject;
  * @author simge
  */
 public class Order {
-    private int orderID;
-    private String orderNumber;
-    private Date deliveryDate;
-    private String department;
-    private String customer;
+    public int orderID;
+    public String orderNumber;
+    public Date deliveryDate;
+//    private String department;
+//    public int customerID;
+    public String customer;
     belmanapp.bll.BelmanAppManager BAManager;
+    
+    public Order(int id, String ordNum, String cName, Date delTime)
+    {
+        this.orderID = id;
+        this.orderNumber = ordNum;
+//        this.customerID = cID;
+        this.customer = cName;
+        this.deliveryDate = delTime;
+    }
 
     public Order() {
         
@@ -48,22 +58,22 @@ public class Order {
         this.orderNumber = orderNumber;
     }
 
-    public Date getDeliveryDate() {
-        return deliveryDate;
-    }
+//    public String getDepartment() {
+//        return department;
+//    }
+//
+//    public void setDepartment(String department) {
+//        this.department = department;
+//    }
 
-    public void setDeliveryDate(Date deliveryDate) {
-        this.deliveryDate = deliveryDate;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
-    }
-
+//    public int getCustomerID() {
+//        return customerID;
+//    }
+//
+//    public void setCustomerID(int customerID) {
+//        this.customerID = customerID;
+//    }
+    
     public String getCustomer() {
         return customer;
     }
@@ -72,8 +82,16 @@ public class Order {
         this.customer = customer;
     }
     
+    public Date getDeliveryDate() {
+        return deliveryDate;
+    }
+
+    public void setDeliveryDate(Date deliveryDate) {
+        this.deliveryDate = deliveryDate;
+    }
+    
     @Override
     public String toString() {
-        return "Order [orderID=" + orderID + ", deliveryDate=" + deliveryDate + ", customer=" + customer + "]";
+        return "Order{" + "orderID=" + orderID + ", orderNumber=" + orderNumber + ", customer=" + customer + ", deliveryDate=" + deliveryDate + "}";
     }
 }

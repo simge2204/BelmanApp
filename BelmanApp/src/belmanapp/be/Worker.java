@@ -10,9 +10,28 @@ package belmanapp.be;
  * @author simge
  */
 public class Worker {
+    private int workerID;
     private String initials;
     private String name;
     private int salary;
+
+    public Worker(int workerID, String initials, String name, int salary) {
+        this.workerID = workerID;
+        this.initials = initials;
+        this.name = name;
+        this.salary = salary;
+    }
+
+    public Worker() {
+    }
+
+    public int getWorkerID() {
+        return workerID;
+    }
+
+    public void setWorkerID(int workerID) {
+        this.workerID = workerID;
+    }
 
     public String getInitials() {
         return initials;
@@ -40,6 +59,6 @@ public class Worker {
     
     @Override
     public String toString() {
-        return "Worker [initials=" + initials + " name=" + name + "salary=" + salary + "]";
+        return "Worker{" + "WorkerID=" + workerID + "initials=" + initials + " name=" + name + "salary=" + salary + "}";
     }
 }

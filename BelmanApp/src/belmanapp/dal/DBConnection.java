@@ -15,13 +15,16 @@ import java.sql.Connection;
  */
 public class DBConnection {
     SQLServerDataSource ds = new SQLServerDataSource();
+//    String path = "C:/Github2/Data and interface - Belman v1/data.json";
     
     public DBConnection()
     {
         ds.setUser("CS2018A_29");
         ds.setPassword("CS2018A_29");
-        ds.setDatabaseName("BelmanAppDatabse");
+        ds.setDatabaseName("BelmanDatabse");
         ds.setServerName("easv-db2");
+        ds.setPortNumber(1433);
+//        System.out.println("Connected to database!");
     }
     
     public Connection getConnection() throws SQLServerException

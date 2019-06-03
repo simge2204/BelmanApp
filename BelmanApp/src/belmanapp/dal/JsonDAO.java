@@ -6,7 +6,10 @@
 package belmanapp.dal;
 
 import belmanapp.JsonData;
+import belmanapp.be.Department;
+import belmanapp.be.DepartmentTask;
 import belmanapp.be.Order;
+import belmanapp.be.Worker;
 import belmanapp.bll.JsonParser;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.sql.Connection;
@@ -14,7 +17,9 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLXML;
 import java.sql.Statement;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -31,78 +36,130 @@ public class JsonDAO {
     BelmanAppDAO dao = new BelmanAppDAO();
     DBConnection db = new DBConnection();
     JsonParser jp = new JsonParser();
-    JsonData jd = new JsonData();
     
-    public void createOrders(int id, String ordNum, String customer, Date delivery) throws SQLServerException, SQLException {
-        String SQL_INSERT = "INSERT INTO Orders(OrderID, OrderNumber, DeliveryTime, Customer) values(?,?,?,?)";
-        try (
-                Connection con = db.getConnection();
-                PreparedStatement stmt = con.prepareStatement(SQL_INSERT,
-                        Statement.RETURN_GENERATED_KEYS);) {
-            stmt.setInt(1, id);
-            stmt.setString(2, ordNum);
-            stmt.setString(3, customer);
-            stmt.setDate(4, delivery);
-//            stmt.setDate(2, order.getDeliveryDate());
-//            stmt.setString(3, order.getCustomer());
-            // ...
-
-//            int affectedRows = stmt.executeUpdate();
-//
-//            if (affectedRows == 0) {
-//                throw new SQLException("Creating user failed, no rows affected.");
-//            }
-//
-//            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-//                if (generatedKeys.next()) {
-//                    order.setOrderNumber(generatedKeys.getString(SQL_INSERT));
-//                    order.setOrderID((int) generatedKeys.getLong(1));
-//                } else {
-                    throw new SQLException("Creating user failed, no ID obtained.");
-                }
-            }
+//    public void addOrders(Order o) throws SQLException, SQLServerException, ParseException {
+////        ordNum = o.getOrderNumber();
+//        try (Connection con = db.getConnection()) {
+//            String sql = "INSERT INTO Orders(OrderNumber, Customer, DeliveryTime) VALUES (?,?,?);";
+////                    + dt.getStartDate() + "," 
+////                    + dt.getEndDate() + "," 
+//            PreparedStatement stmt = con.prepareStatement(sql);
+////            stmt.setInt(1, o.getOrderID());
+//            stmt.setString(1, o.getOrderNumber());
+//////            stmt.setDate(3, dt.getStartDate());
+//////            stmt.setDate(4, dt.getEndDate());
+////            stmt.setInt(3, o.getCustomerID());
+//            stmt.setString(2, o.getCustomer());
+//            stmt.setDate(3, o.getDeliveryDate());
+////            stmt.setObject(1, jp.parseOrderObject(order), 2);
+//            stmt.executeUpdate();
+//        } catch (SQLException ex) {
+//            Logger.getLogger(JsonDAO.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //    }
+//    
+//    public List<Order> getOrders() throws SQLException {
+//        ArrayList<Order> orders = new ArrayList<>();
+//        
+//        try (Connection con = db.getConnection()) {
+//            String sql = "SELECT * FROM Orders ;"; //INNER JOIN Customer ON Orders.CustomerID = Customer.CustomerID
+////                String sql = "Select * FROM Orders;";
+//            PreparedStatement stmt = con.prepareStatement(sql);
+////            stmt.setInt(1, o.getOrderID());
+//            ResultSet rs = stmt.executeQuery();
+//            
+//            while (rs.next()) {
+//                int id = rs.getInt("OrderID");
+//                String ordNum = rs.getString("OrderNumber");
+////                int cID = rs.getInt("CustomerID");
+//                String customer = rs.getString("Customer");
+//                Date delDate = rs.getDate("DeliveryTime");
+//                orders.add(new Order(id, ordNum, customer, delDate));
+//            }
+//        }
+//        return orders;
+//    }
+//    
+//    public void addWorkers(Worker w) throws SQLException
+//    {
+//        try(Connection con = db.getConnection())
+//        {
+//            String sql = "INSERT INTO Worker(WName, Initials, Salary);";
+//            PreparedStatement stmt = con.prepareStatement(sql);
+//            stmt.setString(1, w.getName());
+//            stmt.setString(2, w.getInitials());
+//            stmt.setInt(3, w.getSalary());
+//            stmt.executeUpdate();
+//        }
+//    }
+//    
+//    public List<Worker> getAvailableWorkers() throws SQLException
+//    {
+//            ArrayList<Worker> workers = new ArrayList<>();
+//            try(Connection con = db.getConnection())
+//            {
+//            String sql = "SELECT * FROM Worker;";
+//            PreparedStatement stmt = con.prepareStatement(sql);
+//            ResultSet rs = stmt.executeQuery();
+//            
+//            while(rs.next())
+//            {
+//                int wID = rs.getInt("WorkerID");
+//                String wName = rs.getString("WName");
+//                String initial = rs.getString("Initials");
+//                int salary = rs.getInt("Salary");
+//                workers.add(new Worker(wID, initial, wName, salary));
+//            }
+//        }
+//            return workers;
+//    }
+//    
+//    public void addDepartments(Department d) throws SQLException
+//    {
+//     try(Connection con = db.getConnection())
+//     {
+//         String sql = "INSERT INTO Department(DepartmentID, depName);";
+//         PreparedStatement stmt = con.prepareStatement(sql);
+//         stmt.setInt(1, d.getDepID());
+//         stmt.setString(2, d.getDepName());
+//     }
+//    }
+//    
+//    public void addDepTasks(DepartmentTask dt) throws SQLException
+//    {
+//        try(Connection con = db.getConnection())
+//     {
+//         String sql = "INSERT INTO OrderTask(OrderID, DepartmentID, WorkerID, StartDate, EndDate, FinishedOrder, RealizedProgress, EstimatedProgress);";
+//         PreparedStatement stmt = con.prepareStatement(sql);
+//         stmt.setInt(1, dt.getOrderID());
+//         stmt.setInt(2, dt.getDepID());
+//         stmt.setDate(3, dt.getStartDate());
+//         stmt.setDate(4, dt.getEndDate());
+//         stmt.setBoolean(5, dt.getIsFinished());
+//     }
+//    }
+//    
+//    public List<DepartmentTask> getDepTasks() throws SQLServerException, SQLException
+//    {
+//        ArrayList<DepartmentTask> departmentTasks = new ArrayList<>();
+//        try(Connection con = db.getConnection())
+//        {
+//            String sql = "SELECT * FROM OrderTask;";
+//            PreparedStatement stmt = con.prepareStatement(sql);
+//            ResultSet rs = stmt.executeQuery();
+//            
+//            while(rs.next())
+//            {
+//                int oID = rs.getInt("OrderID");
+//                int dID = rs.getInt("DepartmentID");
+//                int wID = rs.getInt("WorkerID");
+//                Date sDate = rs.getDate("StartDate");
+//                Date eDate = rs.getDate("EndDate");
+////                String dName = rs.getString("DepName");
+//                departmentTasks.add(new DepartmentTask(sDate, eDate, oID, dID, wID));
+//            }
+//        }
+//        return departmentTasks;
+//    }
     
-    public void addOrders(JsonParser jp, Order order) throws SQLException, SQLServerException {
-        try (Connection con = db.getConnection()) {
-            String sql = "INSERT INTO Orders(OrderNumber, DeliveryTime, CustomerID) VALUES (?,?,?) ";
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setString(1, order.getOrderNumber());
-            stmt.setString(2, order.getCustomer());
-            stmt.setDate(3, order.getDeliveryDate());
-            stmt.execute();
-            stmt.addBatch();
-        }
-         catch (SQLException ex) 
-        {
-            Logger.getLogger(JsonDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-}
-    
-    public List<Order> getOrders() {
-        
-        ArrayList<Order> orders = new ArrayList();
-      
-        try (Connection con = db.getConnection()){
-            PreparedStatement stmt;
-            stmt = con.prepareStatement("select * from Orders");
-            ResultSet rs = stmt.executeQuery();
-            
-            while(rs.next())
-            {
-                Order number = new Order();
-                number.setOrderID(rs.getInt("OrderID"));
-                number.setOrderNumber(rs.getString("OrderNumber"));
-                number.setCustomer(rs.getString("Customer"));
-                number.setDeliveryDate(rs.getDate("DeliveryTime"));
-                orders.add(number);
-            }
-        } 
-        catch (SQLException ex) {
-//            ex.printStackTrace();
-            Logger.getLogger(JsonDAO.class.getName()).log(Level.SEVERE,null,ex);
-        }
-        return orders;
     }
-}

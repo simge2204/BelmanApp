@@ -5,19 +5,15 @@
  */
 package belmanapp.bll;
 
-import belmanapp.JsonData;
-import belmanapp.be.Department;
 import belmanapp.be.DepartmentTask;
 import belmanapp.be.Order;
-import belmanapp.dal.DBConnection;
-import belmanapp.dal.JsonDAO;
+import belmanapp.be.Worker;
+import java.sql.Timestamp;
 import java.text.DateFormat;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
+import java.time.ZoneId;
 import java.util.Date;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -28,77 +24,104 @@ import org.json.simple.parser.ParseException;
  */
 public class JsonParser {
     
-    JsonData data;
-    JsonDAO jDAO;
-    Order ord = new Order();
-    Department dep;
-    DBConnection db;
-//    String connectionString = "jdbc:sqlserver://10.176.111.31:1433;database=BelmanAppDatabse;user=CS2018A_29;password=CS2018A_29";
-    
-    public JSONObject parseOrderObject(JSONObject order) throws java.text.ParseException{
+    public Order parseOrderObject(JSONObject order) throws java.text.ParseException{
+        Order o = new Order();
         //Order
         JSONObject orderData = (JSONObject) order.get("Order");
         System.out.println(orderData.get("OrderNumber"));
+        o.setOrderNumber(orderData.get("OrderNumber").toString());
         
         //Customer
         orderData = (JSONObject) order.get("Customer");        
         System.out.println(orderData.get("Name"));
+        o.setCustomer(orderData.get("Name").toString());
 //        System.out.println(((JSONObject) order.get("Customer")).get("Name"));
 //        System.out.println(orderData);
 
         //DeliveryTime
         orderData = (JSONObject) order.get("Delivery");
         String dDate = (String) orderData.get("DeliveryTime").toString().substring(6, 19);//(20, 24);
-        SimpleDateFormat dformatter = new SimpleDateFormat("dd-mm-yyyy");
-        Date date = new Date();
-        String formattedDate = dformatter.format(date);
-        Date parsedDate = dformatter.parse(formattedDate);
-//        JSONObject store = new JSONObject(response);
-//        Integer datetimestamp = Integer.parseInt(date.replaceAll("/Date()/", ""));
-//        Date dateD = new Date(datetimestamp);
-//        DateFormat formatter = new SimpleDateFormat("dd-mm-yyyy");
-//        String dateFormatted = formatter.format(dateD);
-//        LocalDate delD = LocalDate.parse(date);
-//        Date delDate = new SimpleDateFormat("ddmmyyyy").parse(date);
-        System.out.println(parsedDate);
         
-        return orderData;
+        LocalDate deliveryDate = Instant.ofEpochMilli(Long.valueOf(dDate)).atZone(ZoneId.systemDefault()).toLocalDate();
+        
+        Date dtd = new Timestamp(Long.valueOf(dDate));
+        DateFormat formatter = new SimpleDateFormat("dd-mm-yyyy");
+        String dateFormatted = formatter.format(dtd);
+        System.out.println(deliveryDate);
+        
+        java.sql.Date sqlDate = java.sql.Date.valueOf(deliveryDate);
+        
+        //System.out.println(dateFormatted);
+//        System.out.println(parsedDate);
+        o.setDeliveryDate(sqlDate);//(java.sql.Date) orderData.get("DeliveyTime"));
+        
+        return o;
     }
     
-    public JSONObject parseDepObject(JSONObject task) throws ParseException, java.text.ParseException
+    public DepartmentTask parseDepObject(JSONObject task) throws ParseException, java.text.ParseException
     {
+        DepartmentTask dt = new DepartmentTask();
         //DepartmentTask
         JSONObject taskData = (JSONObject) task.get("DepartmentTasks");
-        System.out.println(((JSONObject) task.get("Department")).get("Name"));
+        
+        taskData = (JSONObject) task.get("Department");
+        System.out.println(taskData.get("Name"));
+        dt.setDepName(taskData.get("Name").toString());
+        
         String sDate = (task.get("StartDate").toString().substring(6, 19));
-        SimpleDateFormat sformatter = new SimpleDateFormat("dd-mm-yyyy");
-        Date dateS = new Date();
-        String formattedSDate = sformatter.format(dateS);
-        Date parsedSDate = sformatter.parse(formattedSDate);
-        System.out.println(parsedSDate);
-//        SimpleDateFormat format = new SimpleDateFormat("dd-mm-yyyy");
-//        Date date = (Date) format.parse(sDate);
-//        DepartmentTask depTask = new DepartmentTask();
-//        LocalDate date = LocalDate.parse(sDate, DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
-//        depTask.setStartDate(Date.valueOf(date));
-//        LocalDate date = LocalDate.parse(sDate, DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
+        
+        LocalDate startDate = Instant.ofEpochMilli(Long.valueOf(sDate)).atZone(ZoneId.systemDefault()).toLocalDate();
+        
+        Date dts = new Timestamp(Long.valueOf(sDate));
+        DateFormat sformatter = new SimpleDateFormat("dd-mm-yyyy");
+        String dateSFormatted = sformatter.format(dts);
+        
+        java.sql.Date sqlSDate = java.sql.Date.valueOf(startDate);
+        System.out.println(sqlSDate);
+        
+        dt.setStartDate(sqlSDate);
+
         String eDate = (task.get("EndDate").toString().substring(6, 19));
-        SimpleDateFormat eformatter = new SimpleDateFormat("dd-mm-yyyy");
-        Date dateE = new Date();
-        String formattedEDate = eformatter.format(dateE);
-        Date parsedEDate = eformatter.parse(formattedEDate);
-        System.out.println(parsedEDate);
-        System.out.println(task.get("FinishedOrder"));
-        return taskData;
+        
+        LocalDate endDate = Instant.ofEpochMilli(Long.valueOf(eDate)).atZone(ZoneId.systemDefault()).toLocalDate();
+        
+        Date dte = new Timestamp(Long.valueOf(eDate));
+        DateFormat eformatter = new SimpleDateFormat("dd-mm-yyyy");
+        String dateEFormatted = eformatter.format(dte);
+        
+        java.sql.Date sqlEDate = java.sql.Date.valueOf(endDate);
+        System.out.println(sqlEDate);
+        
+        dt.setEndDate(sqlEDate);
+        
+//        taskData = (JSONObject) task.get("FinishedOrder");        
+//        System.out.println(taskData.get("FnishedOrder").toString());
+//        dt.setIsFinished((boolean)taskData.get("FinishedOrder"));
+        
+        boolean isFinished = (Boolean) task.get("FinishedOrder");
+        System.out.println(isFinished); //System.out.println(task.get("FinishedOrder"));
+        dt.setIsFinished(isFinished); //(String) taskData.get("FinishedOrder")
+        
+        return dt;
 }
         
-    public JSONObject parseWorkerObject(JSONObject worker)
+    public Worker parseWorkerObject(JSONObject worker)
     {
+        Worker w = new Worker();
         JSONObject workerData = (JSONObject) worker.get("AvailableWorkers");
-        System.out.println(worker.get("Initials"));
-        System.out.println(worker.get("Name"));
-        System.out.println(worker.get("SalaryNumber"));
         
-        return workerData;
+        String initials = (String) worker.get("Initials");
+        System.out.println(initials); //System.out.println(worker.get("Initials"));
+        w.setInitials(initials); //workerData.get("Initials").toString()
+        
+        String name = (String) worker.get("Name");
+        System.out.println(name); //System.out.println(worker.get("Name"));
+        w.setName(name); //workerData.get("Name").toString()
+        
+        long salary = (long) worker.get("SalaryNumber");
+        System.out.println(salary); //System.out.println(worker.get("SalaryNumber"));
+        w.setSalary((int) salary); //(int) workerData.get("SalaryNumber")
+        
+        return w;
     }
     }

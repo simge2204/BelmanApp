@@ -5,7 +5,11 @@
  */
 package belmanapp;
 
+import belmanapp.be.Department;
+import belmanapp.be.DepartmentTask;
 import belmanapp.be.Order;
+import belmanapp.be.Worker;
+import belmanapp.bll.JsonParser;
 import belmanapp.dal.BelmanAppDAO;
 import belmanapp.dal.JsonDAO;
 import belmanapp.gui.controller.MainController;
@@ -27,36 +31,39 @@ import org.json.simple.parser.ParseException;
  */
 public class BelmanApp extends Application {
     private Stage primaryStage;
-    MainController mc = new MainController();
-    private String ord;
+    MainController mc;
     BelmanAppDAO bDAO = new BelmanAppDAO();
+    Order o = new Order();
+    Department d = new Department();
+    Worker w = new Worker();
+    DepartmentTask dt = new DepartmentTask();
+//    JSONObject order = new JSONObject();
+//    JSONObject task = new JSONObject();
+//    JSONObject worker = new JSONObject();
+    JsonParser jp = new JsonParser();
+//    static JsonData jd = new JsonData();
+
+    public BelmanApp() throws java.text.ParseException {
+        this.mc = new MainController();
+    }
     
-//    belmanapp.gui.controller.MainController getAllOrderNumbers;
-    
-//    @Override
-//    public void start(Stage stage) throws IOException, Exception {
-//        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("Main.fxml"));
+//     @Override
+//    public void start(Stage stage) throws Exception {
+//        Parent root = FXMLLoader.load(BelmanApp.class.getClassLoader().getResource("belmanapp/gui/view/Main.fxml"));
 //        
-//        Scene scene = new Scene(root);
-//        
-//        stage.setScene(scene);
-//        stage.show();
-//        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("Main.fxml"));
-////        FXMLLoader loader = new FXMLLoader(BelmanApp.class.getClassLoader().getResource("Main.fxml"));
-////            AnchorPane pane = loader.load();
 //        Scene scene = new Scene(root);
 //        
 //        stage.setScene(scene);
 //        stage.show();
 //    }
-
-    @Override
+    
+        @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage; // connect primary stage
         mainWindow();
     }
     
-     // main window
+//      main window
     public void mainWindow() throws IOException, SQLException, FileNotFoundException, ParseException, java.text.ParseException {
             // view
             FXMLLoader loader = new FXMLLoader(BelmanApp.class.getClassLoader().getResource("belmanapp/gui/view/Main.fxml"));
@@ -71,14 +78,23 @@ public class BelmanApp extends Application {
             primaryStage.setScene(new Scene(root));
 //            stage.setScene(scene);
             primaryStage.show();
-//            jDAO.createOrderNumbers(ord);
-//            mc.getOrderNumbers(obj);
+            
+            bDAO.addOrders(o);
+            bDAO.getOrders();
+            bDAO.updateOrders(o);
+            bDAO.addWorkers(w);
+            bDAO.getAvailableWorkers();
+            bDAO.addDepartments(d);
+            bDAO.getDepartments();
+            bDAO.addDepTasks(dt);
+            bDAO.getDepTasks();
     }
     
     /**
      * @param args the command line arguments
+     * @throws java.sql.SQLException
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         launch(args);
     }
 }

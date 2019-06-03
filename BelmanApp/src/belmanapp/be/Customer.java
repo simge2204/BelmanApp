@@ -10,5 +10,14 @@ package belmanapp.be;
  * @author simge
  */
 public class Customer {
+    public String customer;
+    
+    public String getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(String customer) {
+        this.customer = customer;
+    }
     
 }

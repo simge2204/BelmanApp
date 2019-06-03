@@ -5,8 +5,11 @@
  */
 package belmanapp;
 
+import belmanapp.be.DepartmentTask;
 import belmanapp.be.Order;
+import belmanapp.be.Worker;
 import belmanapp.bll.JsonParser;
+import belmanapp.dal.BelmanAppDAO;
 import belmanapp.dal.DBConnection;
 import belmanapp.dal.JsonDAO;
 import belmanapp.gui.controller.MainController;
@@ -15,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -32,88 +36,55 @@ import org.json.simple.parser.ParseException;
  */
 public class JsonData {
 
-    static DBConnection db;
-    static Order o;
+    static Order o = new Order();
     static JsonDAO jDAO = new JsonDAO();
+    static BelmanAppDAO DAO = new BelmanAppDAO();
+//    static JsonParser jp = new JsonParser();
+//    static DepartmentTask dt = new DepartmentTask();
+//    static Worker w = new Worker();
 
     // @SuppressWarnings("unchecked")
-    public static void main(String[] args) throws SQLServerException, SQLException, IOException, FileNotFoundException, ParseException {
+    public static void main(String[] args) throws SQLServerException, SQLException, IOException, FileNotFoundException, ParseException, java.text.ParseException {
+//        Order o = new Order();
+        DepartmentTask dt = new DepartmentTask();
+        Worker w = new Worker();
         parseOrder();
-        parseDepartment();
+//        jDAO = new JsonDAO();
+//        jDAO.Orders(0, ordNum, deliveryDate, ordNum, order);
+        DAO.addOrders(o);
+        DAO.getOrders();
+        parseDepTask();
+        DAO.addDepTasks(dt);
         parseWorker();
-
-        //JSON parser object to parse read file
-//        JSONParser jsonParser = new JSONParser();
-//
-//        try (FileReader reader = new FileReader("C:/Github2/Data and interface - Belman v1/data.json")) {
-//            JsonParser jdata = new JsonParser();
-//            //Read JSON file
-//            Object obj = jsonParser.parse(reader);
-
-//            JSONObject orderList = (JSONObject) obj;
-//            JSONArray orders = (JSONArray) orderList.get("ProductionOrders");
-//
-//            System.out.println(orders);
-//
-//            //Iterate over order array
-//            orders.forEach(order -> {
-//                try {
-//                    jdata.parseOrderObject((JSONObject) order);
-//                } catch (java.text.ParseException ex) {
-//                    Logger.getLogger(JsonData.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            });
-////            jDAO.createOrders(0, ordNum, customer, delivery);
-//            jDAO.addOrders(jdata, o);
-//            jDAO.getOrders();
-            
-//            JSONObject taskList = (JSONObject) obj;
-//            JSONArray task = (JSONArray) taskList.get("DepartmentTasks");
-//            System.out.println(task);
-//            
-//            task.forEach(tasks -> {
-//                try {
-//                    jdata.parseOrderObject((JSONObject) tasks);
-//                } catch (java.text.ParseException ex) {
-//                    Logger.getLogger(JsonData.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            });
- 
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (ParseException ex) {
-//            Logger.getLogger(JsonData.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        DAO.addWorkers(w);
     }
     
-    public static void parseOrder() throws FileNotFoundException, IOException, ParseException
+    public static void parseOrder() throws FileNotFoundException, IOException, ParseException, SQLException, java.text.ParseException, SQLServerException, java.text.ParseException
     {
+        //JSON parser object to parse read file
         JSONParser jsonParser = new JSONParser();
 
         try (FileReader reader = new FileReader("C:/Github2/Data and interface - Belman v1/data.json")) {
             JsonParser jdata = new JsonParser();
+            
             //Read JSON file
             Object obj = jsonParser.parse(reader);
 
             JSONObject orderList = (JSONObject) obj;
             JSONArray orders = (JSONArray) orderList.get("ProductionOrders");
-
             System.out.println(orders);
 
             //Iterate over order array
             orders.forEach(order -> {
                 try {
-                    jdata.parseOrderObject((JSONObject) order);
+                    o = jdata.parseOrderObject((JSONObject) order);
+                    DAO.addOrders(o);
                 } catch (java.text.ParseException ex) {
+                    Logger.getLogger(JsonData.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
                     Logger.getLogger(JsonData.class.getName()).log(Level.SEVERE, null, ex);
                 }
             });
-////            jDAO.createOrders(0, ordNum, customer, delivery);
-//            jDAO.addOrders(jdata, o);
-//            jDAO.getOrders();
-            
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -123,7 +94,7 @@ public class JsonData {
         }
     }
     
-    public static void parseDepartment() {
+    public static void parseDepTask() {
         JSONParser jsonParser = new JSONParser();
 
         try (FileReader reader = new FileReader("C:/Github2/Data and interface - Belman v1/data.json")) {
@@ -139,14 +110,17 @@ public class JsonData {
                 JSONArray tasks = (JSONArray) taskList.get("DepartmentTasks");
                 for (Object dtasks : tasks.toArray()) {
                     JSONObject task = (JSONObject) dtasks;
-                    System.out.println(task);
+                    System.out.println(tasks);
 
                     tasks.forEach(dtask -> {
                         try {
-                            jdata.parseDepObject((JSONObject) dtask);
+                            DepartmentTask dt = jdata.parseDepObject((JSONObject) dtask);
+                            DAO.addDepTasks(dt);
                         } catch (ParseException ex) {
                             Logger.getLogger(JsonData.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (java.text.ParseException ex) {
+                            Logger.getLogger(JsonData.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (SQLException ex) {
                             Logger.getLogger(JsonData.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     });
@@ -161,23 +135,27 @@ public class JsonData {
         }
     }
         
-    public static void parseWorker()
-    {
+    public static void parseWorker() {
         JSONParser jsonParser = new JSONParser();
 
         try (FileReader reader = new FileReader("C:/Github2/Data and interface - Belman v1/data.json")) {
             JsonParser jdata = new JsonParser();
             //Read JSON file
             Object obj = jsonParser.parse(reader);
-        JSONObject workerList = (JSONObject) obj;
+            JSONObject workerList = (JSONObject) obj;
             JSONArray workers = (JSONArray) workerList.get("AvailableWorkers");
 
             System.out.println(workers);
 
             workers.forEach(worker -> {
-                jdata.parseWorkerObject((JSONObject) worker);
+                try {
+                    Worker w = jdata.parseWorkerObject((JSONObject) worker);
+                   DAO.addWorkers(w);
+                } catch (SQLException ex) {
+                    Logger.getLogger(JsonData.class.getName()).log(Level.SEVERE, null, ex);
+                }
             });
-            } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();

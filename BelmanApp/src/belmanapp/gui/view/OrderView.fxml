@@ -2,7 +2,6 @@
 
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.SplitPane?>
@@ -47,10 +46,10 @@
                                              <children>
                                                 <ProgressBar fx:id="estimatedP" layoutX="158.0" layoutY="68.0" prefWidth="200.0" progress="0.0" />
                                                 <ProgressBar fx:id="realizedP" layoutX="158.0" layoutY="129.0" prefWidth="200.0" progress="0.0" />
-                                                <Label layoutX="107.0" layoutY="69.0" text="Start" />
-                                                <Label layoutX="107.0" layoutY="130.0" text="Start" />
-                                                <Label layoutX="379.0" layoutY="69.0" text="Slut" />
-                                                <Label layoutX="379.0" layoutY="130.0" text="Slut" />
+                                                <Label fx:id="startEP" layoutX="83.0" layoutY="69.0" prefHeight="21.0" prefWidth="55.0" AnchorPane.leftAnchor="83.0" AnchorPane.rightAnchor="357.0" />
+                                                <Label fx:id="startRP" layoutX="89.0" layoutY="130.0" prefHeight="21.0" prefWidth="51.0" AnchorPane.leftAnchor="83.0" AnchorPane.rightAnchor="357.0" />
+                                                <Label fx:id="endEP" layoutX="379.0" layoutY="69.0" prefHeight="21.0" prefWidth="64.0" AnchorPane.leftAnchor="379.0" AnchorPane.rightAnchor="52.0" />
+                                                <Label fx:id="endRP" layoutX="379.0" layoutY="130.0" prefHeight="21.0" prefWidth="67.0" AnchorPane.leftAnchor="379.0" AnchorPane.rightAnchor="52.0" />
                                                 <Label layoutX="14.0" text="Progress">
                                                    <font>
                                                       <Font size="24.0" />
@@ -67,17 +66,18 @@
                               </AnchorPane>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                                  <children>
-                                    <SplitPane dividerPositions="0.5" layoutX="50.0" layoutY="100.0" orientation="VERTICAL" prefHeight="459.0" prefWidth="238.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <SplitPane dividerPositions="0.6265356265356266" layoutX="50.0" layoutY="100.0" orientation="VERTICAL" prefHeight="459.0" prefWidth="238.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                       <items>
                                         <AnchorPane fx:id="departments" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                                              <children>
                                                 <Accordion layoutX="20.0" layoutY="14.0" prefHeight="200.0" prefWidth="241.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                   <panes>
-                                                    <TitledPane animated="false" text="untitled 1">
+                                                    <TitledPane animated="false" prefHeight="112.0" prefWidth="241.0" text="untitled 1">
                                                       <content>
-                                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="63.0" prefWidth="239.0">
+                                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="36.0" prefWidth="239.0">
                                                                <children>
-                                                                  <CheckBox layoutX="88.0" layoutY="25.0" mnemonicParsing="false" text="Done" />
+                                                                  <Label fx:id="progress1" layoutX="7.0" layoutY="4.0" text="Progress:" />
+                                                                  <Label layoutX="78.0" layoutY="4.0" prefHeight="21.0" prefWidth="83.0" />
                                                                </children></AnchorPane>
                                                       </content>
                                                     </TitledPane>
@@ -85,7 +85,8 @@
                                                       <content>
                                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                                <children>
-                                                                  <CheckBox layoutX="88.0" layoutY="32.0" mnemonicParsing="false" text="Done" />
+                                                                  <Label fx:id="progress2" layoutX="8.0" layoutY="4.0" text="Progress:" />
+                                                                  <Label layoutX="78.0" layoutY="4.0" prefHeight="21.0" prefWidth="74.0" />
                                                                </children></AnchorPane>
                                                       </content>
                                                     </TitledPane>
@@ -93,18 +94,59 @@
                                                       <content>
                                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                                <children>
-                                                                  <CheckBox layoutX="88.0" layoutY="25.0" mnemonicParsing="false" text="Done" />
+                                                                  <Label fx:id="progress3" layoutX="7.0" layoutY="4.0" text="Progress:" />
+                                                                  <Label layoutX="76.0" layoutY="6.0" prefHeight="21.0" prefWidth="76.0" />
                                                                </children></AnchorPane>
                                                       </content>
                                                     </TitledPane>
+                                                      <TitledPane animated="false" text="untitled">
+                                                        <content>
+                                                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                               <children>
+                                                                  <Label fx:id="progress4" layoutX="7.0" layoutY="4.0" text="Progress:" />
+                                                                  <Label layoutX="75.0" layoutY="4.0" prefHeight="21.0" prefWidth="69.0" />
+                                                               </children>
+                                                            </AnchorPane>
+                                                        </content>
+                                                      </TitledPane>
+                                                      <TitledPane animated="false" text="untitled">
+                                                        <content>
+                                                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                               <children>
+                                                                  <Label fx:id="progress5" layoutX="8.0" layoutY="4.0" text="Progress:" />
+                                                                  <Label layoutX="76.0" layoutY="4.0" prefHeight="21.0" prefWidth="64.0" />
+                                                               </children>
+                                                            </AnchorPane>
+                                                        </content>
+                                                      </TitledPane>
+                                                      <TitledPane animated="false" text="untitled">
+                                                        <content>
+                                                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                               <children>
+                                                                  <Label fx:id="progress6" layoutX="7.0" layoutY="4.0" text="Progress:" />
+                                                                  <Label layoutX="77.0" layoutY="4.0" prefHeight="21.0" prefWidth="62.0" />
+                                                               </children>
+                                                            </AnchorPane>
+                                                        </content>
+                                                      </TitledPane>
+                                                      <TitledPane animated="false" text="untitled">
+                                                        <content>
+                                                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                               <children>
+                                                                  <Label fx:id="progress7" layoutX="7.0" layoutY="4.0" text="Progress:" />
+                                                                  <Label layoutX="75.0" layoutY="4.0" prefHeight="21.0" prefWidth="56.0" />
+                                                               </children>
+                                                            </AnchorPane>
+                                                        </content>
+                                                      </TitledPane>
                                                   </panes>
                                                 </Accordion>
                                              </children></AnchorPane>
                                         <AnchorPane fx:id="availableWorkers" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                                              <children>
-                                                <TableView layoutX="14.0" prefHeight="199.0" prefWidth="241.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                <TableView fx:id="workers" layoutX="14.0" prefHeight="199.0" prefWidth="241.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                   <columns>
-                                                    <TableColumn minWidth="0.0" prefWidth="240.0" text="Available workers" />
+                                                    <TableColumn fx:id="workerNames" minWidth="0.0" prefWidth="240.0" text="Available workers" />
                                                   </columns>
                                                 </TableView>
                                              </children>

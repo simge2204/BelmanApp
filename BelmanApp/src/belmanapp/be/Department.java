@@ -10,16 +10,25 @@ package belmanapp.be;
  * @author simge
  */
 public class Department {
-    private String name;
+    private String depName;
     private int depID;
-    private String worker;
+//    private String worker;
 
-    public String getName() {
-        return name;
+    public Department(String depName, int depID) { //String worker
+        this.depName = depName;
+        this.depID = depID;
+//        this.worker = worker;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Department() {
+    }
+
+    public String getDepName() {
+        return depName;
+    }
+
+    public void setDepName(String name) {
+        this.depName = name;
     }
 
     public int getDepID() {
@@ -30,18 +39,18 @@ public class Department {
         this.depID = depID;
     }
     
-    public String getWorker()
-    {
-        return worker;
-    }
-    
-    public void setWorker(String worker)
-    {
-        this.worker = worker;
-    }
+//    public String getWorker()
+//    {
+//        return worker;
+//    }
+//    
+//    public void setWorker(String worker)
+//    {
+//        this.worker = worker;
+//    }
     
     @Override
     public String toString() {
-        return "Department [name=" + name + ", depID=" + depID + ", worker=" + worker + "]";
+        return "Department{" + "depName=" + depName + ", depID=" + depID + "}"; //", worker=" + worker +
     }
 }
