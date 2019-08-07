@@ -21,6 +21,12 @@ public class Worker {
         this.name = name;
         this.salary = salary;
     }
+    
+    public Worker(String initials, String name, int salary) {
+        this.initials = initials;
+        this.name = name;
+        this.salary = salary;
+    }
 
     public Worker() {
     }

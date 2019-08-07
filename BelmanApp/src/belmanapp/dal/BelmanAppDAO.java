@@ -11,6 +11,7 @@ import belmanapp.be.Department;
 import belmanapp.be.DepartmentTask;
 import belmanapp.be.Order;
 import belmanapp.be.Worker;
+import belmanapp.gui.controller.OrderViewController;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.io.File;
 import java.sql.Connection;
@@ -21,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -40,9 +42,9 @@ public class BelmanAppDAO {
       
     public void addOrders(Order o) throws SQLException, SQLServerException, ParseException {
         try (Connection con = db.getConnection()) {
-            String sql = "INSERT INTO Orders(OrderNumber, Customer, DeliveryTime) VALUES (?,?,?);";
+            String sql = "INSERT INTO Orders(OrderNumber, Customer, DeliveryTime) VALUES(?,?,?);";
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setString(1, o.getOrderNumber());
+            stmt.setLong(1, o.getOrderNumber());
             stmt.setString(2, o.getCustomer());
             stmt.setDate(3, o.getDeliveryDate());
 //            stmt.setString(3, new SimpleDateFormat("MM/dd/yyyy").format(o.getDeliveryDate()));
@@ -52,20 +54,20 @@ public class BelmanAppDAO {
         }
     }
     
-    public List<Order> getOrders() throws SQLException {
+    public List<Order> getOrders() throws SQLException, ParseException {
         ArrayList<Order> orders = new ArrayList<>();
 
-        try(Connection con = db.getConnection()) {
-            String sql = "SELECT * FROM Orders;";
+        try (Connection con = db.getConnection()) {
+            String sql = "SELECT OrderNumber, Customer, DeliveryTime\n"
+                    + "FROM Orders\n";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                int id = rs.getInt("OrderID");
-                String ordNum = rs.getString("OrderNumber");
+                long ordNum = rs.getLong("OrderNumber");
                 String customer = rs.getString("Customer");
                 Date delDate = rs.getDate("DeliveryTime");
-                orders.add(new Order(id, ordNum, customer, delDate));
+                orders.add(new Order(ordNum, customer, delDate));
             }
         } catch (SQLException ex) {
             Logger.getLogger(BelmanAppDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -73,30 +75,33 @@ public class BelmanAppDAO {
         return orders;
     }
     
-    public void updateOrders(Order o) throws SQLException {
-//        ArrayList<Order> orders = new ArrayList<>();
+    public Order getOrderNumber(long orderID)
+    {
         try (Connection con = db.getConnection()) {
-            String sql = "select distinct ordernumber\n"
-                    + "from orders\n"
-                    + "group by ordernumber;";
+            String sql = "SELECT OrderNumber, Customer, DeliveryTime FROM Orders where OrderNumber = ?;";
             PreparedStatement stmt = con.prepareStatement(sql);
-            //"INSERT INTO Orders(OrderNumber, Customer, DeliveryTime) VALUES(?,?,?)"
-                    //                    + "GROUP BY distinct OrderNumber FROM Orders;";
-                    //            PreparedStatement stmt = con.prepareStatement(sql);
-                    //            stmt.setString(1, o.getOrderNumber());
-                    //            stmt.setString(2, o.getCustomer());
-                    //            stmt.setDate(3, o.getDeliveryDate());
-            stmt.executeQuery();
-//            stmt.execute();
+            stmt.setLong(1, orderID);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                long ordNum = rs.getLong("OrderNumber");
+                String customer = rs.getString("Customer");
+                Date delDate = rs.getDate("DeliveryTime");
+                return new Order(ordNum, customer, delDate);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BelmanAppDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
     }
     
-    public void addWorkers(Worker w) throws SQLException {
+    public void addWorker(Worker w) throws SQLException {
         try (Connection con = db.getConnection()) {
-            String sql = "INSERT INTO Worker(WName, Initials, Salary) VALUES(?,?,?);";
+            String sql = "INSERT INTO Worker(Initials, WName, Salary) VALUES(?,?,?)\n";
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setString(1, w.getName());
-            stmt.setString(2, w.getInitials());
+//            stmt.setInt(1, w.getWorkerID());
+            stmt.setString(1, w.getInitials());
+            stmt.setString(2, w.getName());
             stmt.setInt(3, w.getSalary());
             stmt.executeUpdate();
         } catch (SQLException ex) {
@@ -107,7 +112,8 @@ public class BelmanAppDAO {
     public List<Worker> getAvailableWorkers() throws SQLException {
         ArrayList<Worker> workers = new ArrayList<>();
         try (Connection con = db.getConnection()) {
-            String sql = "SELECT * FROM Worker;";
+            String sql = "SELECT WorkerID, Initials, WName, Salary\n"
+                    + "from Worker\n;";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
@@ -126,68 +132,88 @@ public class BelmanAppDAO {
     
     public void addDepartments(Department d) throws SQLException {
         try (Connection con = db.getConnection()) {
-            String sql = "INSERT INTO Department(DepartmentID, depName) VALUES(?,?);";
+            String sql = "INSERT INTO Department(DepName) VALUES(?);";
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, d.getDepID());
-            stmt.setString(2, d.getDepName());
+            stmt.setString(1, d.getDepName());
+            stmt.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(BelmanAppDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-    
-    public void addDepTasks(DepartmentTask dt) throws SQLException {
-        try (Connection con = db.getConnection()) {
-            String sql = "INSERT INTO OrderTask(OrderID, DepartmentID, WorkerID, StartDate, EndDate, FinishedOrder, RealizedProgress, EstimatedProgress) VALUES(?,?,?,?,?,?,?,?,?);";
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, dt.getOrderID());
-            stmt.setInt(2, dt.getDepID());
-            stmt.setDate(3, dt.getStartDate());
-            stmt.setDate(4, dt.getEndDate());
-            stmt.setBoolean(5, dt.getIsFinished());
-        } catch (SQLException ex) {
-            Logger.getLogger(BelmanAppDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public List<DepartmentTask> getDepTasks() throws SQLServerException, SQLException {
-        ArrayList<DepartmentTask> departmentTasks = new ArrayList<>();
-        try (Connection con = db.getConnection()) {
-            String sql = "SELECT * FROM OrderTask;";
-            PreparedStatement stmt = con.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                int oID = rs.getInt("OrderID");
-                int dID = rs.getInt("DepartmentID");
-                int wID = rs.getInt("WorkerID");
-                Date sDate = rs.getDate("StartDate");
-                Date eDate = rs.getDate("EndDate");
-//                String dName = rs.getString("DepName");
-                departmentTasks.add(new DepartmentTask(sDate, eDate, oID, dID, wID));
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(BelmanAppDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return departmentTasks;
     }
     
     public List<Department> getDepartments() throws SQLException {
         ArrayList<Department> departments = new ArrayList<>();
 
         try (Connection con = db.getConnection()) {
-            String sql = "SELECT * FROM Department;";
+            String sql = "SELECT DepID, DepName FROM Department;";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                int depID = rs.getInt("DepartmentID");
+                int depID = rs.getInt("DepID");
                 String depName = rs.getString("DepName");
-                departments.add(new Department(depName, depID));
+                departments.add(new Department(depID, depName));
             }
         } catch (SQLException ex) {
             Logger.getLogger(BelmanAppDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return departments;
+    }
+    
+    public Department getDeparmentByName(String name)
+    {
+        try (Connection con = db.getConnection()) {
+            String sql = "SELECT DepID, DepName FROM Department where DepName = ?;";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, name);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                int depID = rs.getInt("DepID");
+                String depName = rs.getString("DepName");
+               return new Department(depID, depName);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BelmanAppDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public void addDepTask(DepartmentTask dt) throws SQLException {
+        try (Connection con = db.getConnection()) {
+            String sql = "INSERT INTO OrderTask(OrderNumber, DepID, StartDate, EndDate, FinishedOrder) VALUES(?,?,?,?,?);";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setLong(1, dt.getOrderNumber());
+            stmt.setInt(2, dt.getDepID());
+            stmt.setDate(3, dt.getStartDate());
+            stmt.setDate(4, dt.getEndDate());
+            stmt.setBoolean(5, dt.getIsFinished());
+            stmt.executeUpdate();
+        }
+    }
+    
+    public List<DepartmentTask> getDepTasks() throws SQLServerException, SQLException, ParseException {
+        ArrayList<DepartmentTask> departmentTasks = new ArrayList<>();
+        try (Connection con = db.getConnection()) {
+            String sql = "select * from OrderTask;";
+                    //"SELECT OrderNumber, DepID, StartDate, EndDate, FinishedOrder\n"
+                    //+ "from OrderTask\n;";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                long ordNum = rs.getLong("OrderNumber");
+                int depID = rs.getInt("DepID");
+//                int wID = rs.getInt("WorkerID");
+                Date sDate = rs.getDate("StartDate");
+                Date eDate = rs.getDate("EndDate");
+                Boolean isFinish = rs.getBoolean("FinishedOrder");
+                departmentTasks.add(new DepartmentTask(ordNum, depID, sDate, eDate, isFinish));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BelmanAppDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return departmentTasks;
     }
     
     public Order calculateProgress()
@@ -204,5 +230,13 @@ public class BelmanAppDAO {
     {
         
     }
-    
+    //    public void updateOrders(Order o) throws SQLException {
+////        ArrayList<Order> orders = new ArrayList<>();
+//        try (Connection con = db.getConnection()) {
+//            String sql = "UPDATE Orders SET OrderID = OrderID - 1;"; //UPDATE Orders SET OrderNumber = ? WHERE OrderID = ? AND OrderNumber = ?;
+//            PreparedStatement stmt = con.prepareStatement(sql);
+//            stmt.setInt(1, o.getOrderID());
+//            stmt.executeUpdate();
+//        }
+//    }
 }

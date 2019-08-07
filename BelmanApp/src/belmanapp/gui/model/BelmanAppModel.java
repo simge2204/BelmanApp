@@ -5,6 +5,7 @@
  */
 package belmanapp.gui.model;
 
+import belmanapp.be.Department;
 import belmanapp.be.DepartmentTask;
 import belmanapp.be.Order;
 import belmanapp.be.Worker;
@@ -24,7 +25,7 @@ import org.json.simple.JSONObject;
 public class BelmanAppModel {
     private ObservableList<Worker> activeWorker = FXCollections.observableArrayList();
     private ObservableList<DepartmentTask> depName = FXCollections.observableArrayList();
-    private ObservableList<Order> orderID = FXCollections.observableArrayList();
+    private ObservableList<DepartmentTask> orderID = FXCollections.observableArrayList();
     belmanapp.bll.BelmanAppManager BAManager;
 
     public BelmanAppModel() throws ParseException {
@@ -35,7 +36,7 @@ public class BelmanAppModel {
         return depName;
     }
     
-    public void loadDepNames() throws SQLException
+    public void loadDepNames() throws SQLException, SQLServerException, ParseException
     {
         List<DepartmentTask> loadedDepNames = BAManager.getDepTasks();
         
@@ -47,14 +48,14 @@ public class BelmanAppModel {
 //        this.depName = depName;
 //    }
     
-    public ObservableList<Order> getOrderNumbers()
+    public ObservableList<DepartmentTask> getOrderNumbers()
     {
         return orderID;
     }
     
-    public void loadOrdNumbers() throws SQLException
+    public void loadOrdNumbers() throws SQLException, ParseException
     {
-        List<Order> loadedNumbers = BAManager.getOrders();
+        List<DepartmentTask> loadedNumbers = BAManager.getDepTasks();
 
         orderID.clear();
         orderID.addAll(loadedNumbers);
@@ -76,10 +77,10 @@ public class BelmanAppModel {
 //        this.activeWorker = activeWorker;
 //    }
     
-    public void addOrders(Order o) throws SQLException, SQLException, SQLServerException, ParseException, ParseException
-    {
-        BAManager.addOrders(o);
-    }
+//    public void addOrders(Order o) throws SQLException, SQLException, SQLServerException, ParseException, ParseException
+//    {
+//        BAManager.addOrders(o);
+//    }
     
     public void addDepTasks(DepartmentTask dt) throws SQLException
     {

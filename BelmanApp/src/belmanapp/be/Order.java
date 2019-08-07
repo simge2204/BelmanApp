@@ -20,21 +20,24 @@ import org.json.simple.JSONObject;
  */
 public class Order {
     public int orderID;
-    public String orderNumber;
+    public long orderNumber;
     public Date deliveryDate;
-//    private String department;
-//    public int customerID;
     public String customer;
     belmanapp.bll.BelmanAppManager BAManager;
     
-    public Order(int id, String ordNum, String cName, Date delTime)
+    public Order(long ordNum, String cName, Date delTime)
     {
-        this.orderID = id;
         this.orderNumber = ordNum;
-//        this.customerID = cID;
         this.customer = cName;
         this.deliveryDate = delTime;
     }
+    
+//    public Order(long ordNum, String cName, Date delTime)
+//    {
+//        this.orderNumber = ordNum;
+//        this.customer = cName;
+//        this.deliveryDate = delTime;
+//    }
 
     public Order() {
         
@@ -48,12 +51,12 @@ public class Order {
         this.orderID = orderID;
     }
     
-    public String getOrderNumber()
+    public long getOrderNumber()
     {
         return orderNumber;
     }
     
-    public void setOrderNumber(String orderNumber)
+    public void setOrderNumber(long orderNumber)
     {
         this.orderNumber = orderNumber;
     }
@@ -92,6 +95,6 @@ public class Order {
     
     @Override
     public String toString() {
-        return "Order{" + "orderID=" + orderID + ", orderNumber=" + orderNumber + ", customer=" + customer + ", deliveryDate=" + deliveryDate + "}";
+        return "Order{" + ", orderNumber=" + orderNumber + ", customer=" + customer + ", deliveryDate=" + deliveryDate + "}";
     }
 }

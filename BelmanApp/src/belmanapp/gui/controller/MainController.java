@@ -11,6 +11,7 @@ import belmanapp.JsonData;
 import belmanapp.be.DepartmentTask;
 import belmanapp.bll.BelmanAppManager;
 import belmanapp.bll.JsonParser;
+import belmanapp.dal.BelmanAppDAO;
 import belmanapp.dal.JsonDAO;
 import belmanapp.gui.model.BelmanAppModel;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
@@ -54,10 +55,10 @@ import org.json.simple.parser.ParseException;
 public class MainController implements Initializable{
 
     @FXML
-    private TableColumn<Order, String> orderNumber;
+    private TableColumn<Order, Long> orderNumber;
     private belmanapp.BelmanApp main;
     @FXML
-    private TableView<Order> orderView;
+    private TableView<DepartmentTask> orderView;
     @FXML
     private TableColumn<Order, String> customer;
     @FXML
@@ -66,19 +67,20 @@ public class MainController implements Initializable{
     private Button viewSchedule;
     
     //    belmanapp.be.Order order = new belmanapp.be.Order();
+//    @FXML
+    private TableColumn<DepartmentTask, Integer> depID;
+    @FXML
+    private TableColumn<Order, Date> deliveryTime;
+    
     JsonParser jp = new JsonParser();
     belmanapp.be.Order order = new Order();
     belmanapp.be.DepartmentTask depTask = new DepartmentTask();
     JsonData jd = new JsonData();
     Order o;
     belmanapp.gui.model.BelmanAppModel BM = new BelmanAppModel();
-    Order selectedOrder;
-    DepartmentTask selectedOTask;
+    DepartmentTask selectedOrder;
     JsonDAO jDAO;
-    @FXML
-    private TableColumn<Order, Integer> orderID;
-    @FXML
-    private TableColumn<Order, Date> deliveryTime;
+    BelmanAppDAO bDAO = new BelmanAppDAO();
 
     public MainController() throws java.text.ParseException {
         this.jDAO = new JsonDAO();
@@ -98,60 +100,42 @@ public class MainController implements Initializable{
     public void initialize(URL url, ResourceBundle rb) {
 //        orderNumber.setCellValueFactory(data -> data.getValue().getOrderID());
         orderNumber.setCellValueFactory(new PropertyValueFactory("OrderNumber"));
-//        startDate.setCellValueFactory(new PropertyValueFactory("StartDate"));
-//        endDate.setCellValueFactory(new PropertyValueFactory("EndDate"));
         customer.setCellValueFactory(new PropertyValueFactory("Customer"));
-        orderID.setCellValueFactory(new PropertyValueFactory("OrderID"));
+//        orderID.setCellValueFactory(new PropertyValueFactory("OrderID"));
         deliveryTime.setCellValueFactory(new PropertyValueFactory("DeliveryDate"));
-//        finishedOrder.setCellValueFactory(new PropertyValueFactory("FinishedOrder"));
-//        orderView.setItems(orderNumbers);
         orderView.setItems(BM.getOrderNumbers());
         try {
             BM.loadOrdNumbers();
         } catch (SQLException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (java.text.ParseException ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }    
-    
-    //Liste af ordrenumre, fra JSON filen
-//    private ObservableList<Order> orderNumbers = FXCollections.observableArrayList(
-//            
-//    );
-    
-//    public List<Order> getOrders() throws FileNotFoundException, IOException, ParseException, SQLException, java.text.ParseException {
-////        orderID = jp.parseOrderObject(orderList);     
-//        
-//        ArrayList list = new ArrayList<>();
-////        ordNum = jp.parseOrderObject(order).toString();
-////        o.orderNumber = ordNum;
-////        orderView.getItems().addAll(elements)
-////        if (orderNumber == null) {
-////            list.add(ordNum);
-//
-//            System.out.println(orderNumber.getColumns().addAll(list));
-//            List data = FXCollections.observableList(list);
-//            return data;
-//        }   
 
     @FXML
     private void openOrderView(ActionEvent event) throws IOException, SQLException, SQLServerException, java.text.ParseException {
+        if(orderView.isPressed() && selectedOrder.equals(o.orderNumber)){
         FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("belmanapp/gui/view/OrderView.fxml"));
         Parent root2 = (Parent) loader.load();
         Stage stage = new Stage();
         belmanapp.gui.controller.OrderViewController OVController = loader.getController();
+//        bDAO.getDepTasks();
         selectedOrder = orderView.getSelectionModel().getSelectedItem();
-        OVController.setOrderView(order,depTask);
+        OVController.setOrderView(depTask);
+        OVController.viewOrderInfo();
         OVController.setMainController(this);
         stage.setTitle("Order View");
         stage.setScene(new Scene(root2));
         stage.show();
     }
+    }
 
     @FXML
     private void openScheduleView(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("belmanapp/gui/view/OrderView.fxml"));
-        Parent root2 = (Parent) loader.load();
-        Stage stage = new Stage();
+//        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("belmanapp/gui/view/OrderView.fxml"));
+//        Parent root2 = (Parent) loader.load();
+//        Stage stage = new Stage();
 //        belmanapp.gui.controller.OrderViewController OVController = loader.getController();
 //        OVController.setOrderView(order);
 //        OVController.setMainController(this);

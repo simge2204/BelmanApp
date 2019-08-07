@@ -43,38 +43,33 @@ public class BelmanAppManager {
 //        dao.addOrders(o);
 //    }
     
-    public List<Order> getOrders() throws SQLException {
-        return dao.getOrders();
-    }
+//    public List<Order> getOrders() throws SQLException, ParseException {
+//        return dao.getOrders();
+//    }
     
     public List<Worker> getAvailableWorkers() throws ParseException, SQLServerException, SQLException
     {
         return dao.getAvailableWorkers();
     }
     
-    public List<DepartmentTask> getDepartments() throws SQLException
+//    public List<Department> getDepartments() throws SQLException
+//    {
+//        return dao.getDepartments();
+//    }
+    
+    public List<DepartmentTask> getDepTasks() throws SQLException, SQLServerException, ParseException
     {
         return dao.getDepTasks();
-    }
-    
-    public List<DepartmentTask> getDepTasks() throws SQLException
-    {
-        return dao.getDepTasks();
-    }
-    
-    public void addOrders(Order o) throws SQLException, SQLException, SQLServerException, ParseException
-    {
-        dao.addOrders(o);
     }
     
     public void addDeptasks(DepartmentTask dt) throws SQLException
     {
-        dao.addDepTasks(dt);
+        dao.addDepTask(dt);
     }
     
     public void addWorkers(Worker w) throws SQLException
     {
-        dao.addWorkers(w);
+        dao.addWorker(w);
     }
     
     public Order calculateProgress()

@@ -5,6 +5,7 @@
  */
 package belmanapp.gui.controller;
 
+import belmanapp.be.Department;
 import belmanapp.be.DepartmentTask;
 import belmanapp.be.Order;
 import belmanapp.be.Worker;
@@ -15,11 +16,18 @@ import java.awt.Color;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -28,11 +36,14 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
+import javax.swing.JProgressBar;
 import javax.swing.event.ChangeListener;
+import javax.swing.SwingWorker;
 
 /**
  * FXML Controller class
@@ -48,9 +59,9 @@ public class OrderViewController implements Initializable {
     @FXML
     private Label deliveryDate;
     @FXML
-    private Label txtOrdNum;
+    public Label txtOrdNum;
     @FXML
-    private Label txtCustomer;
+    public Label txtCustomer;
     @FXML
     private AnchorPane orderInfo;
     @FXML
@@ -66,39 +77,34 @@ public class OrderViewController implements Initializable {
     @FXML
     private ProgressBar realizedP;
     @FXML
-    private Label txtDate;
+    public Label txtDate;
     @FXML
     private TableView<Worker> workers;
     @FXML
     private TableColumn<Worker, String> workerNames;
     @FXML
-    private Label startEP;
+    public Label startEP;
     @FXML
-    private Label startRP;
+    public Label startRP;
     @FXML
-    private Label endEP;
+    public Label endEP;
     @FXML
-    private Label endRP;
-    
+    public Label endRP;
+    @FXML
+    private TableColumn<DepartmentTask, Boolean> progress;
+    @FXML
+    private TableColumn<DepartmentTask, String> depNames;
+    @FXML
+    private TableView<DepartmentTask> Department;
+        
     private Background GREEN;
-    private Order selectedOrder;
-    private DepartmentTask selectedOTask;
+    private DepartmentTask selectedOrder;
     belmanapp.gui.controller.MainController mainController;
     belmanapp.gui.model.BelmanAppModel BM = new BelmanAppModel();
-    @FXML
-    private Label progress1;
-    @FXML
-    private Label progress2;
-    @FXML
-    private Label progress3;
-    @FXML
-    private Label progress4;
-    @FXML
-    private Label progress5;
-    @FXML
-    private Label progress6;
-    @FXML
-    private Label progress7;
+    private Task task;
+    final Float[] values = new Float[]{0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 1.0f};
+    final Label[] labels = new Label[values.length];
+    final ProgressBar[] pbs = new ProgressBar[values.length];
 
     public OrderViewController() throws ParseException {
         this.mainController = new MainController();
@@ -118,13 +124,47 @@ public class OrderViewController implements Initializable {
         } catch (SQLException ex) {
             Logger.getLogger(OrderViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
+//        depID.setCellValueFactory(new PropertyValueFactory("DepartmentID"));
+        depNames.setCellValueFactory(new PropertyValueFactory("DepName"));
+        progress.setCellValueFactory(new PropertyValueFactory("FinishedOrder"));
+        Department.setItems(BM.getDepName());
+        try {
+            BM.loadDepNames();
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderViewController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(OrderViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+//        selectedOrder.setProgressE(0);
+//        selectedOrder.progressProperty().addListener(new javafx.beans.value.ChangeListener<Object>() {
+//            @Override
+//            public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
+//                realizedP.progressProperty().bind(selectedOrder.progressProperty());
+//            }
+//        });
     }
-    
-//    public void viewOrderInfo() throws SQLException, SQLServerException, SQLServerException, ParseException, ParseException
-//    {
-//        String number = txtOrdNum.getText();
-//        selectedOrder.setOrderNumber(number);
-//    }
+
+    public void viewOrderInfo() throws SQLException, SQLServerException, SQLServerException, ParseException, ParseException
+    {
+//        String number = new SimpleDateFormat("MM/dd/yyyy").format(selectedOrder.getOrderNumber());
+//        txtOrdNum.setUserData(number);
+//        String cname = selectedOrder.getCustomer();
+//        txtCustomer.setText(cname);
+//        String delDate = selectedOrder.getDeliveryDate().toString();
+//        SimpleDateFormat s = new SimpleDateFormat("MM/dd/yyyy");
+//        String dd = s.format(selectedOrder.getDeliveryDate().toString());
+//        txtDate.setText(dd);
+//        txtDate.getText();
+        
+//        SimpleDateFormat dts = new SimpleDateFormat(String.valueOf(selectedOrder.getDeliveryDate()));
+//        DateFormat sformatter = new SimpleDateFormat("DD-MM-YYYY");
+//        String dateSFormatted = sformatter.format(dts);
+//        txtDate.setText(dateSFormatted);
+        
+//        String sd = new SimpleDateFormat("MM/dd/yyyy").format(selectedOTask.getStartDate());
+//        startEP.setUserData(sd);
+        
+    }
     
     public void setMainController(MainController mainController)
     {
@@ -132,44 +172,62 @@ public class OrderViewController implements Initializable {
     }
 
     //Knappen "Færdig", hvilket har funktionen at markere afdelingen som færdig med opgaven, samt at vise dette til de andre afdelinger
-    @FXML
-    private void clickDone(MouseEvent event) {
-        if(taskDone.isPressed())
-        {
-            taskDone.backgroundProperty().setValue(GREEN);
-        }
-    }
+//    private void clickDone(MouseEvent event) {
+//        if(taskDone.isPressed())
+//        {
+//            progress.setText("Done");
+//            taskDone.backgroundProperty().setValue(GREEN);
+//        }
+//    }
     
-//    public List<String> getAvailableWorkers()
+//    public void doInBackground()
 //    {
-//        
+//            Random random = new Random();
+//            int progress = 0;
+//            //Initialize progress property.
+//            selectedOrder.setProgressR(0);
+//            while (progress < 100) {
+//                //Sleep for up to one second.
+//                try {
+//                    Thread.sleep(random.nextInt(1000));
+//                } catch (InterruptedException ignore) {}
+//                //Make random progress.
+//                progress += random.nextInt(10);
+//                selectedOrder.setProgressR(Math.min(progress, 100));
+//            }
 //    }
 //    
-//    public Order calculateProgress()
-//    {
-//        realizedP = new ProgressBar(0);
-//        ProgressIndicator prog = new ProgressIndicator(0);
+//    public void updateProgress() {
+//        realizedP = new ProgressBar(0.7);
+//        for (int i = 0; i < values.length; i++) {
+//            final Label label = labels[i] = new Label();
+//            label.setText("progress:" + values[i]);
+// 
+//            realizedP = pbs[i] = new ProgressBar();
+//            realizedP.setProgress(values[i]);
+////        realizedP = new ProgressBar();
+////        realizedP.setProgress(0);
+////        realizedP.setVisible(true);//StringPainted(true);
 //    }
-    
-    public void updateProgress()
-    {
-
-    }
+//    }
     
     public void updateGUI()
     {
         
     }
     
-    public void setOrderView(Order selectedOrder, DepartmentTask selectedOTask)
+    public void setOrderView(DepartmentTask selectedOrder)
     {
         this.selectedOrder = selectedOrder;
-        this.selectedOTask = selectedOTask;
-        String number = selectedOrder.getOrderNumber();
-        txtOrdNum.setText(number);
-        String cName = selectedOrder.getCustomer();
-        txtCustomer.setText(cName);
-//        String delDate = selectedOrder.getDeliveryDate().toString();
-//        txtDate.setText(delDate);
+    }
+
+    @FXML
+    private void clickDone(ActionEvent event) {
+        selectedOrder.setProgressE(selectedOrder.progressProperty().doubleValue() + 0.1);
+        if(taskDone.isPressed())
+        {
+            progress.setText("Done");
+            taskDone.backgroundProperty().setValue(GREEN);
+        }
     }
 }

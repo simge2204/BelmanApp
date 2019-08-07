@@ -13,6 +13,7 @@ import belmanapp.bll.JsonParser;
 import belmanapp.dal.BelmanAppDAO;
 import belmanapp.dal.JsonDAO;
 import belmanapp.gui.controller.MainController;
+import belmanapp.gui.controller.OrderViewController;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -37,25 +38,12 @@ public class BelmanApp extends Application {
     Department d = new Department();
     Worker w = new Worker();
     DepartmentTask dt = new DepartmentTask();
-//    JSONObject order = new JSONObject();
-//    JSONObject task = new JSONObject();
-//    JSONObject worker = new JSONObject();
     JsonParser jp = new JsonParser();
-//    static JsonData jd = new JsonData();
+    OrderViewController ovc = new OrderViewController();
 
     public BelmanApp() throws java.text.ParseException {
         this.mc = new MainController();
     }
-    
-//     @Override
-//    public void start(Stage stage) throws Exception {
-//        Parent root = FXMLLoader.load(BelmanApp.class.getClassLoader().getResource("belmanapp/gui/view/Main.fxml"));
-//        
-//        Scene scene = new Scene(root);
-//        
-//        stage.setScene(scene);
-//        stage.show();
-//    }
     
         @Override
     public void start(Stage primaryStage) throws Exception {
@@ -78,16 +66,17 @@ public class BelmanApp extends Application {
             primaryStage.setScene(new Scene(root));
 //            stage.setScene(scene);
             primaryStage.show();
-            
-            bDAO.addOrders(o);
+//            bDAO.addOrders(o);
             bDAO.getOrders();
-            bDAO.updateOrders(o);
-            bDAO.addWorkers(w);
+//            bDAO.addWorker(w);
             bDAO.getAvailableWorkers();
-            bDAO.addDepartments(d);
+//            bDAO.addDepartments(d);
             bDAO.getDepartments();
-            bDAO.addDepTasks(dt);
+//            bDAO.addDepTask(dt);
             bDAO.getDepTasks();
+            
+//            ovc.doInBackground();
+//            ovc.updateProgress();
     }
     
     /**

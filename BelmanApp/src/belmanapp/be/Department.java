@@ -14,9 +14,9 @@ public class Department {
     private int depID;
 //    private String worker;
 
-    public Department(String depName, int depID) { //String worker
-        this.depName = depName;
+    public Department(int depID, String depName) { //String worker
         this.depID = depID;
+        this.depName = depName;
 //        this.worker = worker;
     }
 
